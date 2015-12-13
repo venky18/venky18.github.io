@@ -1,8 +1,8 @@
-var color1 = [155, 89, 182];
-var color2 = [230, 126, 34];
-var color3 = [231, 76, 60];
-var color4 = [26, 188, 156];
-var color5 = [41, 128, 185];
+var color1 = [20, 100, 60];
+var color2 = [40, 100, 60];
+var color3 = [192, 57, 43];
+var color4 = [196, 77, 55];
+var color5 = [181, 184, 18];
 var letterColors =[color1,color2,color3,color4,color5];
 var test = "Test Website";
 bubbleShape = "circle";
