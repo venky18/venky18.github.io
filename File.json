@@ -1,0 +1,239 @@
+{
+    "name": "IDN Name",
+    "imageUrl": "IDN.png",
+    "area": "Corporate",
+    "profileUrl": "http://example.com/employee/profile",
+    "office": "CTO office",
+    "tags": "Ceo,tag1,manager,cto",
+    "isLoggedUser": false,
+    "unit": {
+        "type": "business",
+        "value": "Business first"
+    },
+    "positionName": "Integrated Delivery Network",
+    "sales": 23,
+    "thickness": 1,
+    "strokecolor": "red",
+    "children": [
+        {
+            "name": "OSUB1",
+            "imageUrl": "OSUB.png",
+            "area": "Corporate",
+            "profileUrl": "http://example.com/employee/profile",
+            "office": "CTO office",
+            "tags": "Ceo,tag1,manager,cto",
+            "isLoggedUser": false,
+            "unit": {
+                "type": "business",
+                "value": "Business first"
+            },
+            "positionName": "Owner Subsidary",
+            "sales": 23,
+            "thickness": 2,
+            "strokecolor": "green",
+            "children": [
+                {
+                    "name": "Hospital 1",
+                    "imageUrl": "hospital.svg",
+                    "area": "Corporate",
+                    "profileUrl": "http://example.com/employee/profile",
+                    "office": "CTO office",
+                    "tags": "Ceo,tag1,manager,cto",
+                    "isLoggedUser": false,
+                    "unit": {
+                        "type": "business",
+                        "value": "Business first"
+                    },
+                    "positionName": "Hospital",
+                    "sales": 23,
+                    "thickness": 2,
+                    "strokecolor": "red",
+                    "children": [
+                        {
+                            "name": "Ian Devling",
+                            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                            "area": "Corporate",
+                            "profileUrl": "http://example.com/employee/profile",
+                            "office": "CTO office",
+                            "tags": "Ceo,tag1,manager,cto",
+                            "isLoggedUser": false,
+                            "unit": {
+                                "type": "business",
+                                "value": "Business first"
+                            },
+                            "positionName": "Cheaf Executive Officer ",
+                            "sales": 23,
+                            "thickness": 3,
+                            "strokecolor": "red",
+                            "children": []
+                        },
+                        {
+                            "name": "Ian Devling",
+                            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                            "area": "Corporate",
+                            "profileUrl": "http://example.com/employee/profile",
+                                "office": "CTO office",
+                            "tags": "Ceo,tag1,manager,cto",
+                            "isLoggedUser": false,
+                            "unit": {
+                                "type": "business",
+                                "value": "Business first"
+                            },
+                            "positionName": "Cheaf Executive Officer ",
+                            "sales": 23,
+                            "thickness": 3,
+                            "strokecolor": "red",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Hospital 2",
+                    "imageUrl": "Hospital.png",
+                    "area": "Corporate",
+                    "profileUrl": "http://example.com/employee/profile",
+                    "office": "CTO office",
+                    "tags": "Ceo,tag1,manager,cto",
+                    "isLoggedUser": false,
+                    "unit": {
+                        "type": "business",
+                        "value": "Business first"
+                    },
+                    "positionName": "Hospital",
+                    "sales": 23,
+                    "thickness": 1,
+                    "strokecolor": "red",
+                    "children": [
+                        {
+                            "name": "Ian Devling",
+                            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                            "area": "Corporate",
+                            "profileUrl": "http://example.com/employee/profile",
+                            "office": "CTO office",
+                            "tags": "Ceo,tag1,manager,cto",
+                            "isLoggedUser": false,
+                            "unit": {
+                                "type": "business",
+                                "value": "Business first"
+                            },
+                            "positionName": "Cheaf Executive Officer ",
+                            "sales": 23,
+                            "thickness": 1,
+                            "strokecolor": "red",
+                            "children": [
+                                {
+                                    "name": "Ian Devling",
+                                    "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                                    "area": "Corporate",
+                                    "profileUrl": "http://example.com/employee/profile",
+                                    "office": "CTO office",
+                                    "tags": "Ceo,tag1,manager,cto",
+                                    "isLoggedUser": false,
+                                    "unit": {
+                                        "type": "business",
+                                        "value": "Business first"
+                                    },
+                                    "positionName": "Cheaf Executive Officer ",
+                                    "sales": 23,
+                                    "thickness": 1,
+                                    "strokecolor": "red",
+                                    "children": []
+                                },
+                                {
+                                    "name": "Ian Devling",
+                                    "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                                    "area": "Corporate",
+                                    "profileUrl": "http://example.com/employee/profile",
+                                    "office": "CTO office",
+                                    "tags": "Ceo,tag1,manager,cto",
+                                    "isLoggedUser": false,
+                                    "unit": {
+                                        "type": "business",
+                                        "value": "Business first"
+                                    },
+                                    "positionName": "Cheaf Executive Officer ",
+                                    "sales": 23,
+                                    "thickness": 1,
+                                    "strokecolor": "red",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Ian Devling",
+                            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                            "area": "Corporate",
+                            "profileUrl": "http://example.com/employee/profile",
+                            "office": "CTO office",
+                            "tags": "Ceo,tag1,manager,cto",
+                            "isLoggedUser": false,
+                            "unit": {
+                                "type": "business",
+                                "value": "Business first"
+                            },
+                            "positionName": "Cheaf Executive Officer ",
+                            "sales": 23,
+                            "thickness": 1,
+                            "strokecolor": "red",
+                            "children": [
+                                {
+                                    "name": "Ian Devling",
+                                    "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                                    "area": "Corporate",
+                                    "profileUrl": "http://example.com/employee/profile",
+                                    "office": "CTO office",
+                                    "tags": "Ceo,tag1,manager,cto",
+                                    "isLoggedUser": false,
+                                    "unit": {
+                                        "type": "business",
+                                        "value": "Business first"
+                                    },
+                                    "positionName": "Cheaf Executive Officer ",
+                                    "sales": 23,
+                                    "thickness": 1,
+                                    "strokecolor": "red",
+                                    "children": []
+                                },
+                                {
+                                    "name": "Ian Devling",
+                                    "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg",
+                                    "area": "Corporate",
+                                    "profileUrl": "http://example.com/employee/profile",
+                                    "office": "CTO office",
+                                    "tags": "Ceo,tag1,manager,cto",
+                                    "isLoggedUser": false,
+                                    "unit": {
+                                        "type": "business",
+                                        "value": "Business first"
+                                    },
+                                    "positionName": "Cheaf Executive Officer ",
+                                    "sales": 23,
+                                    "thickness": 1,
+                                    "strokecolor": "red",
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "OSUB2",
+            "imageUrl": "OSUB.png",
+            "area": "Corporate",
+            "profileUrl": "http://example.com/employee/profile",
+            "office": "CTO office",
+            "tags": "Ceo,tag1,manager,cto",
+            "isLoggedUser": false,
+            "unit": {
+                "type": "business",
+                "value": "Business first"
+            },
+            "positionName": "Owner Subsidary",
+            "sales": 23,
+            "thickness": 2,
+            "strokecolor": "green"
+                    }
+    ]
+}
