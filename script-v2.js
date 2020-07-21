@@ -31,14 +31,14 @@ function drawOrganizationChart(params) {
 
     var circularRemovedNode;
     var RelationSubtypeColors = {
-        "Filled": "#2d3436",
-        "Owned": "#00cec9",
-        "Affiliated Purchasing": "#00b894",
-        "Managed": "#fdcb6e",
-        "Leased": "#d63031",
-        "OWNERSHIP": "#e17055",
-        "DEPARTMENT": "#81ecec",
-        "OUTLET": "#dfe6e9"
+        "Filled": "grey",
+        "Owned": "blue",
+        "Affiliated Purchasing": "teal",
+        "Managed": "red",
+        "Leased": "orange",
+        "OWNERSHIP": "purple",
+        "DEPARTMENT": "green",
+        "OUTLET": "black"
     };
 
     var attrs = {
@@ -123,7 +123,12 @@ function drawOrganizationChart(params) {
     var tooltip = d3.select('body')
         .append('div')
         .attr('class', 'customTooltip-wrapper');
+
+    var sidebar = d3.select('body')
+        .append('div')
+        .attr('class', 'sidebar-wrapper');
     var dragStarted = null;
+
     function generateUUID(){
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -161,26 +166,26 @@ function drawOrganizationChart(params) {
                     }
                     id = generateUUID(); 
                     name = $('#CreateNodeName').val();
-                    new_node =        { 
-                                        "REL_TYPE": "Filled",
-                                        "REL_SUBTYPE": "Filled",
-                                        "ENTITY_ID": 17773320,
-                                        "NO_OF_OSUBS": 3,
-                                        "id" : id,
-                                        "NO_OF_HOSPS": 9,
-                                        "NO_OF_SOCS": 269,
-                                        "NO_OF_OUTLETS": 46,
-                                        "ENTITY_NAME": $('#createChildName').val(),
-                                        "ENTITY_TYPE": "CORP",
-                                        "ENTITY_ORG_TYPE": "IDN",
-                                        "ENTITY_ORG_SUBTYPE": "UNSPEC",
-                                        "ENTITY_ADDR1": "1800 ORLEANS ST",
-                                        "ENTITY_CITY": "BALTIMORE",
-                                        "ENTITY_STATE": "MD",
-                                        "ENTITY_ZIP": 21287,
-                                        "ENTITY_340B_FLAG": "N",
-                                        "ENTITY_SREP_ACCESS": "N",
-                                        "children" : null};
+                    new_node =  { 
+                                "REL_TYPE": "Filled",
+                                "REL_SUBTYPE": "Filled",
+                                "ENTITY_ID": 17773320,
+                                "NO_OF_OSUBS": 3,
+                                "id" : id,
+                                "NO_OF_HOSPS": 9,
+                                "NO_OF_SOCS": 269,
+                                "NO_OF_OUTLETS": 46,
+                                "ENTITY_NAME": $('#createChildName').val(),
+                                "ENTITY_TYPE": "CORP",
+                                "ENTITY_ORG_TYPE": "OUTLET",
+                                "ENTITY_ORG_SUBTYPE": "UNSPEC",
+                                "ENTITY_ADDR1": "1800 ORLEANS ST",
+                                "ENTITY_CITY": "BALTIMORE",
+                                "ENTITY_STATE": "MD",
+                                "ENTITY_ZIP": 21287,
+                                "ENTITY_340B_FLAG": "N",
+                                "ENTITY_SREP_ACCESS": "N",
+                                "children" : null};
                     // console.log('Create Node name: ' + name);
                     create_node_parent.children.push(new_node);
                     create_node_modal_active = false;
@@ -494,6 +499,17 @@ function drawOrganizationChart(params) {
             .attr("data-node-group-id", function(d) {
                 return d.uniqueIdentifier;
             })
+            .attr("fill", function(d) {
+                debugger;
+                var cl = ""
+                if (d.ENTITY_NAME.startsWith("(Filled)")){
+                    cl = "#c5c5c5"
+                }
+                else{   
+                    cl = "white"
+                }
+                return cl
+            })
             .attr("class", function(d) {
                 var res = "";
                 if (d.isLoggedUser) res += 'nodeRepresentsCurrentUser ';
@@ -698,7 +714,13 @@ function drawOrganizationChart(params) {
             })
             // .style("stroke-dasharray", ("3, 3")) 
             .attr("stroke-width", function(d) {
-                return "2px"
+                if(d.target.ENTITY_ORG_TYPE == "OSUB")
+
+                    {debugger;
+                        return "4px"}
+                else{
+                    return "2px";
+                }
             })
 
         .attr("d", function(d) {
@@ -789,6 +811,38 @@ function drawOrganizationChart(params) {
             }).join('');
         }
 
+        function sideBarContent(item){
+            var addvar = item.ENTITY_ADDR1 + ", " + item.ENTITY_STATE + ", " + item.ENTITY_CITY + ", " + item.ENTITY_ZIP ;
+
+            var strVar = "";
+            strVar += '<div class="ui card sidebarcard">'
+            strVar += '<div class="content">'
+            strVar += '<img class="left floated mini ui image" src="https://semantic-ui.com/images/avatar/large/elliot.jpg" style="height:  30px;">'
+            strVar += '<div class="header">'+toTitleCase(item.ENTITY_NAME)+'</div>'
+            strVar += '<div class="meta">'+item.ENTITY_ORG_TYPE+'</div>'
+            strVar += '<div><address> <a target="_blank" href="' + 'https://maps.google.com/?q='+addvar +'">'+ addvar +' </a> </address></div>'
+            strVar += '<div class="ui divider"></div><div class="description">'
+            strVar += '<div>Net Patient Revenue </span> <span class= "right-float"><b>$ 3.5B</b></span> </div><br>'
+            strVar += '<div>Net Income: </span> <span class= "right-float"><b>$ 2.3B</b></span> </div><br>'
+            strVar += '<div>Net Income Margin: </span> <span class= "right-float"><b>$ 1.9B</b></span> </div>'
+            strVar += '<div class="ui divider"></div>'
+            strVar += '<div>No of Employed Physicians  </span> <span class= "right-float"><b>342</b></span> </div><br>'
+            strVar += '<div>No of Affiliated OSUBs </span> <span class= "right-float"><b>'+item.NO_OF_OSUBS+'</b></span> </div><br>'
+            strVar += '<div>No of Affiliated Hospitals </span> <span class= "right-float"><b>'+item.NO_OF_HOSPS+'</b></span> </div><br>'
+            strVar += '<div>No of Affiliated SOCs </span> <span class= "right-float"><b>'+item.NO_OF_SOCS+'</b></span> </div>'
+            strVar += '<div class="ui divider"></div>'
+            strVar += '<div>Structure Segment: </span> <span class= "right-float"><b>Low</b></span> </div><br>'
+            strVar += '<div>Patient Experience Segment: </span> <span class= "right-float"><b>Medium</b></span> </div><br>'
+            strVar += '<div>Quality Segment: </span> <span class= "right-float"><b>Medium</b></span> </div><br>'
+            strVar += '<div>Research Segment: </span> <span class= "right-float"><b>High</b></span> </div><br>'
+            strVar += '<div>Willingness to Partner Segment: </span> <span class= "right-float"><b>Medium</b></span> </div><br>'
+            strVar += '<div>Structure Segment: </span> <span class= "right-float"><b>High</b></span> </div><br>'
+            strVar += '<div>Expression Segment: </span> <span class= "right-float"><b>High</b></span> </div>'
+            strVar += '</div>'
+            strVar += '</div>'
+ 
+            return strVar
+        }
         function tooltipContent(item) {
 
             var strVar = "";
@@ -850,21 +904,25 @@ function drawOrganizationChart(params) {
         }
         function sideBarHandler(d)
         {
-		       	var x = ""
-		       	x += '<div class="ui message">'
-				 x+= '<div class="header">'
-				   x+= 'New Site Features'
-				 x+= '</div>'
-				 x+= '<ul class="list">'
-				   x+= '<li>You can now have cover images on blog pages</li>'
-				   x+= '<li>Drafts will now auto-save while writing</li>'
-				 x+= '</ul>'
-			x+=	'</div>'
+		       	var content = sideBarContent(d)
+                sidebar.html(content);
+                d3.select('.sidebar-wrapper').style('display','block').style('opacity',1)
+                $('#sideBar').show()
+                console.log("sidebar")
+                
+                
+
+        }
+        function sideBarOutHandler(d)
+        {
+            sidebar.transition()
+            .duration(200)
+            .style('opacity', '0').style('display', 'none');
+            d3.select('div.sidebar-wrapper').select('div.ui.card').remove()
+   
         }
 
         function tooltipOutHandler() {
-        	// console.log("Event from tooltip Out",d3.event);
-
             tooltip.transition()
                 .duration(200)
                 .style('opacity', '0').style('display', 'none');
@@ -890,7 +948,13 @@ function drawOrganizationChart(params) {
         	var outside = tooltip.filter(equalToEventTarget).empty();
         	if (outside) {
         		tooltip.style('opacity', '0').style('display', 'none');
+
         	}
+            // var outside1 = sidebar.filter(equalToEventTarget).empty();
+            // if (outside1){
+            //     sidebar.style('opacity', '0').style('display', 'none');
+
+            // }
         });
 
     }
@@ -1366,10 +1430,3 @@ function drawOrganizationChart(params) {
 
 
 }
-
-
-// d3.select('g').attr('transform','translate(-136,134) scale(1)')
-
-// $('.ui.fluid.search.selection.dropdown')
-//   .dropdown()
-// ;

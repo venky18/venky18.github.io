@@ -5,7 +5,6 @@
   font-family: 'Roboto', sans-serif;
 }
 
-
 /* ########################   DEPARTMENT INFO  ############################*/
 
 .department-information {
@@ -179,7 +178,7 @@
 }
 .user-search-box .list-item .description .name {
   font-size: 15px;
-  color: #aa1414;
+  color: black;
   font-weight: 900;
   margin: 0;
   padding: 0;
@@ -261,73 +260,7 @@
   text-align: left;
 }
 
-.tooltip-hr {
-  width: 70px;
-  background-color: #91a4a5;
-  height: 1px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: -17px;
-  margin-bottom: 25px;
-}
-
-.tooltip-desc {
-  padding-left: 10px;
-  margin-top: -20px;
-  margin-left: 20px;
-  overflow: auto;
-}
-
-.tooltip-desc .name {
-  color: #962828;
-  font-weight: 900;
-  letter-spacing: 1px;
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 2px;
-  text-decoration: none;
-}
-
-.tooltip-desc .name:hover {
-  text-decoration: underline;
-}
-
-.tooltip-desc .position {
-  color: #59525b;
-  letter-spacing: 1px;
-  font-size: 17px;
-  font-weight: 500;
-  margin-bottom: 2px;
-  margin-top: 0px;
-}
-
-.tooltip-desc .area {
-  color: #91a4a5;
-  letter-spacing: 1px;
-  font-size: 16px;
-  font-weight: 400;
-  margin-bottom: 2px;
-  margin-top: 7px;
-}
-
-.tooltip-desc .office {
-  color: #91a4a5;
-  line-height: 160%;
-  font-size: 14px;
-  font-weight: 400;
-  margin-bottom: -10px;
-  margin-top: -5px;
-}
-
-.tooltip-desc .tags-wrapper .title {
-  display: inline-block;
-  float: left;
-}
-
-.tooltip-desc .tags-wrapper .tags {
-  display: inline-block;
-  float: left;
-}
+.
 
 .bottom-tooltip-hr {
   width: 100%;
@@ -433,6 +366,12 @@
 }
 
 .btn-download{
+    top: 190px;
+    position: absolute;
+  right: 25px;
+
+}
+.btn-commit{
     top: 150px;
     position: absolute;
   right: 25px;
@@ -460,11 +399,11 @@
 /* ############################################## SVG ################################# */
 
 .nodeHasChildren {
-  fill: white;
+
 }
 
 .nodeDoesNotHaveChildren {
-  fill: white;
+
 }
 
 .nodeRepresentsCurrentUser {
@@ -607,4 +546,39 @@ vertical-align: middle;
 .d3-context-menu ul li:hover {
   background-color: #4677f8;
   color: #fefefe;
+}
+.right-float{
+  float: right;
+}
+.sidebar-wrapper{
+    position: absolute;
+    top:140px;
+    left:25px;
+    display: block;
+}
+.sidebarcard {
+  overflow-y: auto;
+  max-height: 420px;
+}
+
+.svg-class{
+  transform: translate(200,0);
+}
+.legends{
+  position: absolute;
+  left: 25px;
+  top: 590px;
+  height: 26px;
+  width: 120px;
+}
+.legends2{
+  position: absolute;
+  left: 160px;
+  top: 590px;
+  height: 26px;
+  width: 120px;
+}
+.orange-bar{
+  color: white;
+  background-color:  #f7911f !important;
 }
