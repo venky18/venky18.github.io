@@ -241,13 +241,14 @@
     }
     $('.ui.fluid.search.selection.dropdown').dropdown("refresh")
     $('.ui.fluid.search.selection.dropdown').dropdown('set selected', 0);
+
     function treeWrapper(argument) {
-    d3.selectAll("svg").remove();
-    // debugger;
-    var tempData = data[argument];
-    params.data = tempData;
-    // params.pristinaData = JSON.parse(JSON.stringify(tempData));
-    drawOrganizationChart(params);
+        d3.selectAll("svg").remove();
+        // debugger;
+        var tempData = data[argument];
+        params.data = tempData;
+        // params.pristinaData = JSON.parse(JSON.stringify(tempData));
+        drawOrganizationChart(params);
     }
     })
     </script>
