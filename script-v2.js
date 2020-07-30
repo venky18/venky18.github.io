@@ -77,6 +77,7 @@ function drawOrganizationChart(params) {
     var panSpeed = 200;
     var panBoundary = 20;
     var tree = d3.layout.tree().nodeSize([attrs.nodeWidth + 40, attrs.nodeHeight]);
+    
     var diagonal = d3.svg.diagonal()
         .projection(function (d) {
             return [d.x + attrs.nodeWidth / 2, d.y + attrs.nodeHeight / 2];
@@ -790,8 +791,8 @@ function drawOrganizationChart(params) {
         parents.forEach(function(p) {
             if (p._children)
               return;
-            var p1 = p.children[p.children.length - 1];
-            var p2 = p.children[0];
+            // var p1 = p.children[p.children.length - 1];
+            // var p2 = p.children[0];
             var currPar = Object.assign({}, p);//helper for left right navigation position
 
             var pagingData = [];
@@ -828,7 +829,7 @@ function drawOrganizationChart(params) {
                 //     var x = currPar.x+ 140 ;
                 // }
                 console.log(currPar);
-                debugger;
+                // debugger;
                 return "translate(" + x + "," + y + ")";
               }).on("click", paginate);
           
@@ -854,7 +855,7 @@ function drawOrganizationChart(params) {
           });
           
           function paginate(d) {
-            console.log(d, "data")
+            console.log(d, "paginate_data")
             d.parent.page = d.no;
             
             setPage(d.parent);
@@ -1256,7 +1257,7 @@ function drawOrganizationChart(params) {
             } else {
                 
                 var searchResult = params.funcs.findInTree(params.data, value);
-                debugger;
+                // debugger;
                 params.funcs.reflectResults(searchResult);
             }
 
@@ -1378,7 +1379,9 @@ function drawOrganizationChart(params) {
 
     function locateRecursive(d, id) {
         if (d.uniqueIdentifier == id) {
+            console.log("before expand", d)
             expandParents(d);
+            console.log("after expand", d)
         } else if (d._children) {
             d._children.forEach(function (ch) {
                 ch.parent = d;
@@ -1396,6 +1399,7 @@ function drawOrganizationChart(params) {
     /* expand current nodes collapsed parents */
     function expandParents(d) {
         while (d.parent) {
+            debugger;
             d = d.parent;
             if (!d.children) {
                 d.children = d._children;
@@ -1457,6 +1461,7 @@ function drawOrganizationChart(params) {
                 locateRecursive(ch, id)
             });
         }
+        debugger;
 
         update(attrs.root, {
             locate: id
