@@ -354,7 +354,7 @@
 /* #############################   Buttons  ############################################*/
 
 .btn-search {
-  top: 110px;
+  top: 60px;
   position: absolute;
   right: 25px;
 }
@@ -369,12 +369,13 @@
     top: 190px;
     position: absolute;
   right: 25px;
-
+display: none !important;
 }
 .btn-commit{
     top: 150px;
     position: absolute;
   right: 25px;
+  display: none !important;
 
 }
 .btn-back {
@@ -473,11 +474,20 @@ text {
   font-size: 12px;
 }
 .dropdown-box {
-  position: absolute;
-  left: 25px;
-  top: 90px;
+  /* position: absolute; */
+  /* left: 25px;
+  top: 90px; */
   height: 26px;
   width: 300px;
+
+}
+#filter-bar{
+  margin: 0px !important;
+  height: 60px;
+    box-shadow: none;
+    background-color: #faf9fb;
+    padding-top: 10px;
+    padding-left: 9px;
 
 }
 #svgChart{
@@ -567,18 +577,21 @@ vertical-align: middle;
 .legends{
   position: absolute;
   left: 25px;
-  top: 590px;
+  top: 655px;
   height: 26px;
   width: 120px;
 }
 .legends2{
   position: absolute;
   left: 160px;
-  top: 590px;
+  top: 655px;
   height: 26px;
   width: 120px;
 }
 .orange-bar{
   color: white;
-  background-color:  #f7911f !important;
+  background-image: url('white label header.svg') !important;
+  background-repeat:no-repeat;
+  background-size:cover;
+  /* background-color:  #f7911f !important; */
 }

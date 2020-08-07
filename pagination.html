@@ -46,6 +46,7 @@
 
 
 </head>
+  <button id="but_test">Clickme</button>
 <body>
     
 
@@ -848,8 +849,45 @@
     root.x0 = height / 2;
     root.y0 = 0;
     reset(root)
-    update(root);
+    update(root); 
+    // console.log(recfind(root,"IOperator",[]))
+    var  final_path = Array.from(new Set(recfind(root,"StackedAreaLabeler",[])))
+    reset(root)
+    console.log(root)
+    console.log(final_path)
+    
+    final_path.forEach(element => {
+      console.log("aaa",element)
+    });
 
+    final_path.shift()
+
+    function sex(){
+    function expandSelectedNodes(node,path){
+      if(path.length > 0)
+      {
+        path[0].pageNo
+        node.children = node.kids.filter( kid => kid.pageNo == path[0].pageNo)
+      }
+      else{
+        return 0
+      }
+      
+      var next_nod = node.children.filter(next_node => next_node.name == path[0].name)[0]
+      path.shift()
+      expandSelectedNodes(next_nod,path)
+      
+    }
+      expandSelectedNodes(root,final_path)
+      update(root)
+    
+  
+  }
+    // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    // // reset(root)
+    // console.log(root)
+    // // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    // update(root);
 
     function update(source) {
       // Compute the new tree layout.
@@ -1025,39 +1063,50 @@
           .attr("width", 25)
           .attr("height", 25);
       });
-
-      function recfind (node, value){    
-        if (node.name == value){
-            console.log("found the element")
-            return node;
-        }
-				if(node.children && node.children[node.children.length-1].name != node.kids[node.kids.length - 1].name  )
-				{	
-					// console.log ("")
-					node.children.forEach(function (d) {
-					recfind(d,value)})
-					node.children = []
-					node.kids.forEach(function(){})
-					
-				}
-				else{
-					console.log(node.children, node.kids)
-				}
-        // else if (node.kids) {
-        //   node.children.forEach(function (d) {
-        //         //check if it has other pages.
-				// 				// console.log(d.name,d.pageNo,node.kids.length/PAGINATION) 
-				// 				console.log(d.name,d.pageNo , Math.ceil(node.kids.length/PAGINATION))
-        //         if(d.pageNo < Math.ceil(node.kids.length/PAGINATION))
-        //         {
-                  
-        //         }
-        //         recfind(d,value)
-        //     })
-        // }
-      }
-      recfind(root,"ScaleBinding")
+      
+      
     }
+
+      function recfind (node, value,path){    
+        if (node.name == value){
+            console.log("XXXXfound the elementXXXX")
+            path.push(node)
+            return path
+        }
+        // node.children.forEach
+        else if(node.children){
+          for (let index = 0; index < node.children.length; index++) {
+
+              path.push(node)
+              var fo = recfind(node.children[index],value,path)
+              if( fo )
+              {
+                return fo 
+              }
+              else{ path.pop() }
+          }
+        
+          if (node.children && node.children[node.children.length-1].name != node.kids[node.kids.length - 1].name  )
+          {
+            var currPageNo  = node.children[0].pageNo
+            console.log("cuurent Page",currPageNo)
+            node.children = node.kids.filter( kid => kid.pageNo == currPageNo+1)
+
+            path.push(node)
+            var fo = recfind(node,value,path)
+                if( fo )
+                {
+                  return fo 
+                }
+                else{ path.pop() }
+          
+          }
+          else{ return false}
+        }
+        else{
+            return false
+        }
+      }
 
     function paginate(d) {
       console.log(d, "data")

@@ -1,3 +1,18 @@
+preorderTraverse = (rootNode, 
+    visitFn = node => {}, 
+    childrenFn = node => node.children) => {
+    const stack = []
+    stack.push(rootNode)
+    while (stack.length) {
+    const node = stack.pop()
+    visitFn(node)
+    if (childrenFn(node)) [d]
+        stack.push(...childrenFn(node).reverse())
+        }
+    }
+}
+
+------------------------------
 var x = 0; 
 function recfind (node, value){    
     if (node.uniqueIdentifier == value){

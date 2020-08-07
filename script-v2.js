@@ -114,7 +114,10 @@ function drawOrganizationChart(params) {
         if (d && d.kids) {
             d.page = 1;
             d.children = [];
+            console.log(d.ENTITY_NAME)
+            
             d.kids.forEach(function (d1, i) {
+              
                 d1.pageNo = Math.ceil((i + 1) / PAGINATION);
                 if (d.page === d1.pageNo) {
                     d.children.push(d1)
@@ -123,20 +126,22 @@ function drawOrganizationChart(params) {
             })
         }
     }
-    addPageno(attrs.root)
+    addPageno(attrs.root) 
     
+
     console.log("********************************");
     console.log(attrs.root);
     expand(attrs.root);
+    
     if (attrs.root.children) {
         attrs.root.children.forEach(collapse);
     }
-
-
+      
+    console.log("********************************");
+    console.log(attrs.root);
 
 
     update(attrs.root);
-
     d3.select(attrs.selector).style("height", attrs.height);
 
     var tooltip = d3.select('body')
@@ -600,7 +605,7 @@ function drawOrganizationChart(params) {
             .attr('class', 'entity-name')
             .attr("text-anchor", "left")
             .text(function (d) {
-                return d.ENTITY_NAME.trim();
+                return toTitleCase(d.ENTITY_NAME.toLowerCase()).trim();
             })
             .call(wrap, 180);
 
@@ -646,13 +651,8 @@ function drawOrganizationChart(params) {
             .attr("text-anchor", "left")
 
             .text(function (d) {
-                if(d.children && d._children){
-                return d.children.length + d._children.length;}
-                else{
-                    if(d.children){return d.children.length}
-                    else if(d._children){return d._children.length}
-                }
-                
+                if(d.kids ){
+                return d.kids.length }                
             })
 
         nodeGroup.append("defs").append("svg:clipPath")
@@ -732,7 +732,7 @@ function drawOrganizationChart(params) {
             // })
             .attr("stroke", function (d) {
                 
-                console.log(RelationSubtypeColors[d.target.REL_TYPE])
+                // console.log(RelationSubtypeColors[d.target.REL_TYPE])
                 return RelationSubtypeColors[d.target.REL_TYPE]
             })
             // .style("stroke-dasharray", ("3, 3")) 
@@ -828,7 +828,7 @@ function drawOrganizationChart(params) {
                 //     var y = currPar.y+ 80 + 20;
                 //     var x = currPar.x+ 140 ;
                 // }
-                console.log(currPar);
+                // console.log(currPar);
                 // debugger;
                 return "translate(" + x + "," + y + ")";
               }).on("click", paginate);
@@ -877,35 +877,35 @@ function drawOrganizationChart(params) {
             }
           }
 
-        if (param && param.locate) {
+        // if (param && param.locate) {
             
-            console.log("located");
-            debugger;
-            var x;
-            var y;
+        //     console.log("located");
+        //     debugger;
+        //     var x;
+        //     var y;
 
-            // #search in nodes i.e. open nodes.
-            // #if not found look recursively 
-            debugger;
+        //     // #search in nodes i.e. open nodes.
+        //     // #if not found look recursively 
+        //     debugger;
 
 
 
-            nodes.forEach(function (d) {
-                if (d.uniqueIdentifier == param.locate) {
-                    x = d.x;
-                    y = d.y;
-                }
-            });
+        //     nodes.forEach(function (d) {
+        //         if (d.uniqueIdentifier == param.locate) {
+        //             x = d.x;
+        //             y = d.y;
+        //         }
+        //     });
 
-            // normalize for width/height
-            var new_x = (-x + (window.innerWidth / 2));
-            var new_y = (-y + (window.innerHeight / 2));
+        //     // normalize for width/height
+        //     var new_x = (-x + (window.innerWidth / 2));
+        //     var new_y = (-y + (window.innerHeight / 2));
 
-            // move the main container g
-            svg.attr("transform", "translate(" + new_x + "," + new_y + ")")
-            zoomBehaviours.translate([new_x, new_y]);
-            zoomBehaviours.scale(1);
-        }
+        //     // move the main container g
+        //     svg.attr("transform", "translate(" + new_x + "," + new_y + ")")
+        //     zoomBehaviours.translate([new_x, new_y]);
+        //     zoomBehaviours.scale(1);
+        // }
 
         if (param && param.centerMySelf) {
             var x;
@@ -1314,6 +1314,7 @@ function drawOrganizationChart(params) {
     }
 
     function expand(d) {
+       
         if (d.children) {
             d.children.forEach(expand);
         }
@@ -1450,19 +1451,33 @@ function drawOrganizationChart(params) {
     function locate(id) {
         
         /* collapse all and expand logged user nodes */
-        if (!attrs.root.children) {
-            if (!attrs.root.uniqueIdentifier == id) {
-                attrs.root.children = attrs.root._children;
-            }
-        }
+        // if (!attrs.root.children) {
+        //     if (!attrs.root.uniqueIdentifier == id) {
+        //         attrs.root.children = attrs.root._children;
+        //     }
+        // }
+        // if (attrs.root.children) {
+        //     attrs.root.children.forEach(collapse);
+        //     attrs.root.children.forEach(function (ch) {
+        //         locateRecursive(ch, id)
+        //     });
+        // }
+        // debugger;
+
+        var copy_object = _.cloneDeep(attrs.root)
+        expand(copy_object)
+        var  final_path = Array.from(new Set(recfind (copy_object, id,[])))
+        console.log(final_path)
+        final_path.forEach(element => {
+            console.log("path",element)
+        });
+        final_path.shift()
+
         if (attrs.root.children) {
             attrs.root.children.forEach(collapse);
-            attrs.root.children.forEach(function (ch) {
-                locateRecursive(ch, id)
-            });
         }
-        debugger;
-
+        
+        expandSelectedNodes(attrs.root,final_path)
         update(attrs.root, {
             locate: id
         });
@@ -1557,6 +1572,60 @@ function drawOrganizationChart(params) {
         link.exit().remove();
     };
 
+    function recfind (node, value,path){    
+        if (node.uniqueIdentifier == value){
+            console.log("XXXXfound the elementXXXX")
+            path.push(node)
+            return path
+        }
+        // node.children.forEach
+        else if(node.children){
+          for (let index = 0; index < node.children.length; index++) {
+
+              path.push(node)
+              var fo = recfind(node.children[index],value,path)
+              if( fo )
+              {
+                return fo 
+              }
+              else{ path.pop() }
+          }
+        
+          if (node.children && node.children[node.children.length-1].uniqueIdentifier != node.kids[node.kids.length - 1].uniqueIdentifier  )
+          {
+            var currPageNo  = node.children[0].pageNo
+            console.log("cuurent Page",currPageNo)
+            node.children = node.kids.filter( kid => kid.pageNo == currPageNo+1)
+
+            path.push(node)
+            var fo = recfind(node,value,path)
+                if( fo )
+                {
+                  return fo 
+                }
+                else{ path.pop() }
+          
+          }
+          else{ return false}
+        }
+        else{
+            return false
+        }
+    }
+    function expandSelectedNodes(node,path){
+        
+        while(path.length > 0)
+        {
+            node.children = node.kids.filter( kid => kid.pageNo == path[0].pageNo)
+            node = node.children.filter(next_node => next_node.uniqueIdentifier == path[0].uniqueIdentifier)[0]
+            path.shift()
+        }
+                
+        // var next_nod = node.children.filter(next_node => next_node.uniqueIdentifier == path[0].uniqueIdentifier)[0]
+        // path.shift()
+        // expandSelectedNodes(next_nod,path)
+        
+    }
 
 
 }
