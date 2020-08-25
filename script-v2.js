@@ -41,30 +41,30 @@ function drawOrganizationChart(params) {
     };
 
     var attrs = {
-        EXPAND_SYMBOL: '\uf067',
-        COLLAPSE_SYMBOL: '\uf068',
+        EXPAND_SYMBOL: '+', //\uf067 \uf106
+        COLLAPSE_SYMBOL: '-', // \uf068 \uf107
         selector: params.selector,
         root: params.data,
         width: params.chartWidth,
         height: params.chartHeight,
         index: 0,
         nodePadding: 9,
-        collapseCircleRadius: 7,
+        collapseCircleRadius: 9,
         nodeHeight: 80,
-        nodeWidth: 300,
-        duration: 750,
+        nodeWidth: 270,
+        duration: 600,
         rootNodeTopMargin: 20,
         minMaxZoomProportions: [0.05, 3],
-        linkLineSize: 200,
-        collapsibleFontSize: '10px',
+        linkLineSize: 150,
+        collapsibleFontSize: '15px',
         userIcon: '\uf007',
-        nodeStroke: "#bbdefb",
+        nodeStroke: "#cecece",
         nodeStrokeWidth: '1px'
     }
 
 
     var dynamic = {}
-    dynamic.nodeImageWidth = attrs.nodeHeight * 100 / 140;
+    dynamic.nodeImageWidth = attrs.nodeHeight * 100 / 190;
     dynamic.nodeImageHeight = attrs.nodeHeight - 2 * attrs.nodePadding;
     dynamic.nodeTextLeftMargin = attrs.nodePadding * 2 + dynamic.nodeImageWidth
     dynamic.rootNodeLeftMargin = attrs.width / 2;
@@ -76,27 +76,76 @@ function drawOrganizationChart(params) {
     // panning variables
     var panSpeed = 200;
     var panBoundary = 20;
-    var tree = d3.layout.tree().nodeSize([attrs.nodeWidth + 40, attrs.nodeHeight]);
+    var tree = d3.layout.tree().nodeSize([attrs.nodeWidth + 40, attrs.nodeHeight])
+                .separation(function(a, b) {
+        return a.parent == b.parent ? 1 : 1.15;
+    });;
     
-    var diagonal = d3.svg.diagonal()
-        .projection(function (d) {
-            return [d.x + attrs.nodeWidth / 2, d.y + attrs.nodeHeight / 2];
-        });
+    // var tree = d3.layout.tree()
+    //     .nodeSize([nodeWidth + horizontalSeparationBetweenNodes, nodeHeight + verticalSeparationBetweenNodes])
+        
+
+    function diagonal(s, t) {
+        const x = s.x+attrs.nodeWidth / 2;
+        const y = s.y+attrs.nodeHeight / 2;
+        const ex = t.x+attrs.nodeWidth / 2;
+        const ey = t.y+attrs.nodeHeight / 2;
+
+        let xrvs = ex - x < 0 ? -1 : 1;
+        let yrvs = ey - y < 0 ? -1 : 1;
+
+        let rdef = 35;
+        let r = Math.abs(ex - x) / 2 < rdef ? Math.abs(ex - x) / 2 : rdef;
+
+        r = Math.abs(ey - y) / 2 < r ? Math.abs(ey - y) / 2 : r;
+
+        let h = Math.abs(ey - y) / 2 - r;
+        let w = Math.abs(ex - x) - r * 2;
+        //w=0;
+        const path = `
+            M ${x} ${y}
+            L ${x} ${y+h*yrvs}
+            C  ${x} ${y+h*yrvs+r*yrvs} ${x} ${y+h*yrvs+r*yrvs} ${x+r*xrvs} ${y+h*yrvs+r*yrvs}
+            L ${x+w*xrvs+r*xrvs} ${y+h*yrvs+r*yrvs}
+            C  ${ex}  ${y+h*yrvs+r*yrvs} ${ex}  ${y+h*yrvs+r*yrvs} ${ex} ${ey-h*yrvs}
+            L ${ex} ${ey}`
+        return path;
+    }
+
+    // var diagonal = d3.svg.diagonal()
+    //     .projection(function (d) {
+    //         return [d.x + attrs.nodeWidth / 2, d.y + attrs.nodeHeight / 2];
+    //     });
 
     var zoomBehaviours = d3.behavior
         .zoom()
         .scaleExtent(attrs.minMaxZoomProportions)
         .on("zoom", redraw);
 
+    d3.selection.prototype.appendHTML =
+    d3.selection.enter.prototype.appendHTML = function(HTMLString) {
+        return this.select(function() {
+            return this.appendChild(document.importNode(new DOMParser().parseFromString(HTMLString, 'text/html').body.childNodes[0], true));
+        });
+    };
+
+    d3.selection.prototype.appendSVG =
+    d3.selection.enter.prototype.appendSVG = function(SVGString) {
+        return this.select(function() {
+            return this.appendChild(document.importNode(new DOMParser()
+            .parseFromString('<svg xmlns="http://www.w3.org/2000/svg">' + SVGString + '</svg>', 'application/xml').documentElement.firstChild, true));
+        });
+    };
+    
     var svg = d3.select(attrs.selector)
-        .append("svg")
+        .append("svg") 
         .attr("width", attrs.width)
         .attr("height", attrs.height)
         .call(zoomBehaviours)
         .append("g")
         .attr("transform", "translate(" + attrs.width / 2 + "," + 20 + ")");
-
-    //necessary so that zoom knows where to zoom and unzoom from
+        // filters go in defs element
+   
     zoomBehaviours.translate([dynamic.rootNodeLeftMargin, attrs.rootNodeTopMargin]);
 
     attrs.root.x0 = 0;
@@ -500,11 +549,16 @@ function drawOrganizationChart(params) {
             })
 
         // Enter any new nodes at the parent's previous position.
+        
+        // #entrance 
         var nodeEnter = node.enter()
             .append("g")
             .attr("class", "node")
             .call(dragListener)
             .attr("transform", function (d) {
+                if(param && param.parent_page){
+                    return ("translate("+param.parent_page[0]+","+ param.parent_page[1]+")")
+                }
                 return "translate(" + source.x0 + "," + source.y0 + ")";
             })
 
@@ -516,13 +570,13 @@ function drawOrganizationChart(params) {
 
 
 
-
         nodeGroup.append("rect")
             .attr("width", attrs.nodeWidth)
             .attr("height", attrs.nodeHeight)
             .attr("data-node-group-id", function (d) {
                 return d.uniqueIdentifier;
             })
+            .attr('rx', '.5rem')
             .attr("fill", function (d) {
                 
                 var cl = ""
@@ -530,7 +584,7 @@ function drawOrganizationChart(params) {
                     cl = "#c5c5c5"
                 }
                 else {
-                    cl = "white"
+                    cl = "#fff"
                 }
                 return cl
             })
@@ -559,22 +613,22 @@ function drawOrganizationChart(params) {
                 return v.uniqueIdentifier;
             });
 
-        var collapsibleRects = collapsiblesWrapper.append("rect")
-            .attr('class', 'node-collapse-right-rect')
-            .attr('height', attrs.collapseCircleRadius)
-            .attr('fill', 'black')
-            .attr('x', attrs.nodeWidth - attrs.collapseCircleRadius)
-            .attr('y', attrs.nodeHeight - 7)
-            .attr("width", function (d) {
-                if (d.children || d._children) return attrs.collapseCircleRadius;
-                return 0;
-            })
+        // collapsiblesWrapper.append("rect")
+        //     .attr('class', 'node-collapse-right-rect')
+        //     .attr('height', attrs.collapseCircleRadius)
+        //     .attr('fill', 'black')
+        //     .attr('x', attrs.nodeWidth/2 )
+        //     .attr('y', attrs.nodeHeight - 7)
+        //     .attr("width", function (d) {
+        //         if (d.children || d._children) return attrs.collapseCircleRadius;
+        //         return 0;
+        //     })
 
         var collapsibles =
             collapsiblesWrapper.append("circle")
                 .attr('class', 'node-collapse')
-                .attr('cx', attrs.nodeWidth - attrs.collapseCircleRadius)
-                .attr('cy', attrs.nodeHeight - 7)
+                .attr('cx', attrs.nodeWidth/2)
+                .attr('cy', attrs.nodeHeight )
                 .attr("", setCollapsibleSymbolProperty);
 
         //hide collapse rect when node does not have children
@@ -586,13 +640,14 @@ function drawOrganizationChart(params) {
 
         collapsiblesWrapper.append("text")
             .attr('class', 'text-collapse')
-            .attr("x", attrs.nodeWidth - attrs.collapseCircleRadius)
-            .attr('y', attrs.nodeHeight - 3)
+            .attr("x", attrs.nodeWidth/2 )
+            .attr('y', attrs.nodeHeight +4.5)
             .attr('width', attrs.collapseCircleRadius)
             .attr('height', attrs.collapseCircleRadius)
             .style('font-size', attrs.collapsibleFontSize)
             .attr("text-anchor", "middle")
-            .style('font-family', 'FontAwesome')
+            .style('font-family', 'Fira Code')
+            .style('font-weight', '500')
             .text(function (d) {
                 return d.collapseText;
             })
@@ -607,7 +662,7 @@ function drawOrganizationChart(params) {
             .text(function (d) {
                 return toTitleCase(d.ENTITY_NAME.toLowerCase()).trim();
             })
-            .call(wrap, 180);
+            .call(wrap, 200);
 
         nodeGroup.append("text")
             .attr("x", dynamic.nodeTextLeftMargin)
@@ -669,7 +724,7 @@ function drawOrganizationChart(params) {
         nodeGroup.append("svg:image")
             .attr('y', 2 + attrs.nodePadding)
             .attr('x', attrs.nodePadding)
-            .attr('preserveAspectRatio', 'none')
+            .attr('preserveAspectRatio', "")
             .attr('width', dynamic.nodeImageWidth)
             .attr('height', dynamic.nodeImageHeight - 4)
             .attr('clip-path', "url(#clip)")
@@ -679,7 +734,7 @@ function drawOrganizationChart(params) {
             })
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
-            .duration(attrs.duration)
+            .duration(attrs.duration) //3000
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             })
@@ -691,6 +746,7 @@ function drawOrganizationChart(params) {
             .attr('rx', 3)
             .attr("stroke", function (d) {
                 if (param && d.uniqueIdentifier == param.locate) {
+                    print("param is here",param)
                     return '#a1ceed'
                 }
                 return attrs.nodeStroke;
@@ -703,13 +759,25 @@ function drawOrganizationChart(params) {
             })
         // d3.select()
         // Transition exiting nodes to the parent's new position.
-        var nodeExit = node.exit().transition()
-            .duration(attrs.duration)
+        // #exit
+        console.log("WIll exit",param)
+            var nodeExit = node.exit()
+            .attr('opacity', 1)
+            .transition()
+            .duration(attrs.duration) //3000
             .attr("transform", function (d) {
-                return "translate(" + source.x + "," + source.y + ")";
+                if(param && param.parent_page){
+                    return ("translate("+param.parent_page[0]+","+ param.parent_page[1]+")")
+                }
+                return ("translate("+source.x+","+ source.y+")")
+                
+                // return "translate(" + d.x-100 + "," + d.y + ")";
             })
-            .remove();
-
+            .each('end', function() {
+                d3.select(this).remove();
+            })
+            .attr('opacity', 0);
+  
         nodeExit.select("rect")
             .attr("width", attrs.nodeWidth)
             .attr("height", attrs.nodeHeight)
@@ -733,47 +801,56 @@ function drawOrganizationChart(params) {
             .attr("stroke", function (d) {
                 
                 // console.log(RelationSubtypeColors[d.target.REL_TYPE])
+                // return "#cfcfcf"
                 return RelationSubtypeColors[d.target.REL_TYPE]
             })
             // .style("stroke-dasharray", ("3, 3")) 
             .attr("stroke-width", function (d) {
-                if (d.target.ENTITY_ORG_TYPE == "OSUB") {
+                // if (d.target.ENTITY_ORG_TYPE == "OSUB") {
                     
-                    return "4px"
-                }
-                else {
+                //     return "4px"
+                // }
+                // else {
                     return "2px";
-                }
+                // }
             })
 
             .attr("d", function (d) {
+                if(param && param.parent_page){
+                    var o = {
+                        x: param.parent_page[0],
+                        y: param.parent_page[1]
+                    };
+                    return diagonal(o,o)
+                }
                 var o = {
-                    x: source.x0,
-                    y: source.y0
+                    x: source.x,
+                    y: source.y
                 };
-                return diagonal({
-                    source: o,
-                    target: o
-                });
+                return diagonal(o,o);
             });
 
         // Transition links to their new position.
         link.transition()
             .duration(attrs.duration)
-            .attr("d", diagonal);
+            .attr("d", d => diagonal(d.source,d.target));
 
         // Transition exiting nodes to the parent's new position.
         link.exit().transition()
             .duration(attrs.duration)
             .attr("d", function (d) {
+                if(param && param.parent_page){
+                    var o = {
+                        x: param.parent_page[0],
+                        y: param.parent_page[1]
+                    };
+                    return diagonal(o,o)
+                }
                 var o = {
                     x: source.x,
                     y: source.y
                 };
-                return diagonal({
-                    source: o,
-                    target: o
-                });
+                return diagonal(o,o);
             })
             .remove();
 
@@ -788,6 +865,7 @@ function drawOrganizationChart(params) {
             return (d.kids && d.kids.length > PAGINATION) ? true : false;
           });
         svg.selectAll(".page").remove();
+        svg.selectAll(".page-text").remove();
         parents.forEach(function(p) {
             if (p._children)
               return;
@@ -796,6 +874,8 @@ function drawOrganizationChart(params) {
             var currPar = Object.assign({}, p);//helper for left right navigation position
 
             var pagingData = [];
+            var pageTextData = [];
+
             if (p.page > 1) {
               pagingData.push({
                 type: "prev",
@@ -810,6 +890,13 @@ function drawOrganizationChart(params) {
                 no: (p.page + 1)
               });
             }
+            if (p.children && p.kids) {
+                pageTextData.push({
+                currPage: p.page,
+                TotalPage: Math.ceil(p.kids.length / PAGINATION)
+              });
+            }
+            
             var pageControl = svg.selectAll(".page")
               .data(pagingData, function(d) {
                 return (d.parent.id + d.type);
@@ -852,15 +939,32 @@ function drawOrganizationChart(params) {
               .attr("y", -5)
               .attr("width", 10)
               .attr("height", 10);
+              // ######################
+            var pageTextControl = svg.selectAll(".page-text")
+            .data(pageTextData)
+            .enter()
+            .append("g")
+            .attr("class", "page-text")
+            .attr("transform", function(d) {
+            var x = currPar.x+ 180 
+            var y = currPar.y+ 100 
+            return "translate(" + x + "," + y + ")";
+            })
+            pageTextControl.append("text")
+            .text(function (d) {
+            return "Page"+d.currPage +"out of "+d.TotalPage
+        })
           });
           
-          function paginate(d) {
+          function paginate(d,) {
             console.log(d, "paginate_data")
             d.parent.page = d.no;
             
             setPage(d.parent);
-            
-            update(attrs.root);
+            // update(attrs.root, );
+            update(attrs.root,{
+                parent_page: [d.parent.x0,d.parent.y0]
+            });
             console.log("after paginate",attrs.root)
           }
           function setPage(d) {
@@ -1131,7 +1235,7 @@ function drawOrganizationChart(params) {
                 word,
                 line = [],
                 lineNumber = 0,
-                lineHeight = 1.1, // ems
+                lineHeight = 1.2, // ems
                 x = text.attr("x"),
                 y = text.attr("y"),
                 dy = 0, //parseFloat(text.attr("dy")),
@@ -1567,7 +1671,7 @@ function drawOrganizationChart(params) {
             .attr("d", d3.svg.diagonal())
             .attr('pointer-events', 'none');
 
-        link.attr("d", d3.svg.diagonal());
+        link.attr("d", diagonal(d.source,d.target));
 
         link.exit().remove();
     };
